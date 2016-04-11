@@ -4,12 +4,11 @@ contract CrowdFund {
     uint amount;
   }
 
-  event FundsReceived(address sender);
-  event GoalCrossed();
+  event Log(string message);
 
   mapping (uint => Funder) funders;
   uint public numberOfFunders = 0;
-  address accountToSendTo;
+  address public accountToSendTo;
   uint public goalAmount;
   uint public deadline;
   bool public isOpen = true;
@@ -26,9 +25,9 @@ contract CrowdFund {
     uint amount = msg.value;
     funders[numberOfFunders++] = (Funder({addr: msg.sender, amount: amount}));
     amountReceived += amount;
-    FundsReceived(msg.sender);
-    if (amountReceived > goalAmount) {
-      GoalCrossed();
+    Log("Funds Received");
+    if (amountReceived >= goalAmount) {
+      Log("Goal Crossed");
     }
   }
 
@@ -41,14 +40,18 @@ contract CrowdFund {
   function transfer() {
     if (now >= deadline) {
       if (amountReceived >= goalAmount) {
+        Log("Goal Crossed Transferring to Benificiary");
         accountToSendTo.send(amountReceived);
       } else {
+        Log("Goal Not Reached. Refunding Amount");
         for (uint i = 0; i < numberOfFunders; i++) {
           Funder funder = funders[i];
           funder.addr.send(funder.amount);
         }
       }
       isOpen = false;
+    } else {
+      Log("Deadline not reached");
     }
   }
 }
