@@ -1,5 +1,7 @@
 contract multiplier {
-  function multiply(uint x, uint y, uint z) returns (uint result) {
+  event Multiplied(int result);
+  function multiply(int x, int y, int z) returns (int result) {
     result = x * y * z;
+    Multiplied(result);
   }
 }
