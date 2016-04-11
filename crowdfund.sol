@@ -40,7 +40,7 @@ contract CrowdFund {
   function transfer() {
     if (now >= deadline) {
       if (amountReceived >= goalAmount) {
-        Log("Goal Crossed Transferring to Benificiary");
+        Log("Goal Crossed Transferring to Beneficiary");
         accountToSendTo.send(amountReceived);
       } else {
         Log("Goal Not Reached. Refunding Amount");
