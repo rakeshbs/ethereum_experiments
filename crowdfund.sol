@@ -37,21 +37,29 @@ contract CrowdFund {
     received = amountReceived;
   }
 
-  function transfer() {
-    if (now >= deadline) {
-      if (amountReceived >= goalAmount) {
-        Log("Goal Crossed Transferring to Beneficiary");
-        accountToSendTo.send(amountReceived);
-      } else {
-        Log("Goal Not Reached. Refunding Amount");
-        for (uint i = 0; i < numberOfFunders; i++) {
-          Funder funder = funders[i];
-          funder.addr.send(funder.amount);
-        }
-      }
-      isOpen = false;
-    } else {
+  modifier deadlineCrossed() {
+    if (now >= deadline)
+      _
+    else
       Log("Deadline not reached");
+  }
+
+  function kill() deadlineCrossed() {
+    transfer();
+    suicide(accountToSendTo);
+  }
+
+  function transfer() deadlineCrossed() {
+    if (amountReceived >= goalAmount) {
+      Log("Goal Crossed Transferring to Beneficiary");
+      accountToSendTo.send(amountReceived);
+    } else {
+      Log("Goal Not Reached. Refunding Amount");
+      for (uint i = 0; i < numberOfFunders; i++) {
+        Funder funder = funders[i];
+        funder.addr.send(funder.amount);
+      }
     }
+    isOpen = false;
   }
 }
