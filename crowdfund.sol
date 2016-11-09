@@ -1,3 +1,5 @@
+pragma solidity >=0.3.0;
+
 contract CrowdFund {
   struct Funder {
     address addr;
@@ -39,7 +41,7 @@ contract CrowdFund {
 
   modifier deadlineCrossed() {
     if (now >= deadline)
-      _
+      _;
     else
       Log("Deadline not reached");
   }
@@ -52,12 +54,14 @@ contract CrowdFund {
   function transfer() deadlineCrossed() {
     if (amountReceived >= goalAmount) {
       Log("Goal Crossed Transferring to Beneficiary");
-      accountToSendTo.send(amountReceived);
+      if (!accountToSendTo.send(amountReceived))
+        throw;
     } else {
       Log("Goal Not Reached. Refunding Amount");
       for (uint i = 0; i < numberOfFunders; i++) {
         Funder funder = funders[i];
-        funder.addr.send(funder.amount);
+        if (!funder.addr.send(funder.amount))
+          throw;
       }
     }
     isOpen = false;
