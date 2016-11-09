@@ -1,3 +1,5 @@
+pragma solidity >=0.3.0;
+
 contract BirthCertificate {
   string name;
   string father;
