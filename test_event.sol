@@ -1,3 +1,4 @@
+pragma solidity >=0.3.0;
 contract testevent {
   int data;
   event setData(int data);
