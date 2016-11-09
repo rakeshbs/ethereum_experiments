@@ -1,3 +1,4 @@
+pragma solidity >=0.3.0;
 contract multiplier {
   event Multiplied(int result);
 
